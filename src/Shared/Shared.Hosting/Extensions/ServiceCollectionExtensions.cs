@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
 using EasyNetQ;
 using EasyNetQ.AutoSubscribe;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Abstractions;
@@ -37,9 +35,9 @@ namespace Shared.Hosting.Extensions
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
-                        ValidIssuer = jwtSettings.Issuer,
-                        ValidateAudience = true,
-                        ValidAudience = jwtSettings.Audience,
+                        ValidIssuer = jwtSettings.ValidIssuer,
+                        ValidateAudience = false,
+                        ValidAudience = jwtSettings.ValidAudience,
                         ValidateLifetime = true
                     };
                 });
@@ -50,7 +48,7 @@ namespace Shared.Hosting.Extensions
             services.AddHttpContextAccessor();
             services.AddTransient<ICurrentUser, CurrentUser>();
         }
-
+        
         public static void AddEventBus(this IServiceCollection services, Action<EventBusSettings> options)
         {
             var busOptions = new EventBusSettings();
@@ -69,8 +67,6 @@ namespace Shared.Hosting.Extensions
 
                 return subscriber;
             });
-
-            services.AddHostedService<EventBusInitializationBackgroundService>();
         }
     }
 }

@@ -79,7 +79,11 @@ namespace Shared.Hosting
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapGet("/ping", async context => { await context.Response.WriteAsync("Pong"); }); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapGet("/ping", async context => { await context.Response.WriteAsync("Pong"); });
+            });
         }
     }
 }

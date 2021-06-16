@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using EasyNetQ.AutoSubscribe;
 using Microsoft.Extensions.Hosting;
-using Shared.Hosting.Options;
 
 namespace Shared.Hosting.Infrastructure.EventBus
 {
