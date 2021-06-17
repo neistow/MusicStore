@@ -1,0 +1,18 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCatalog";
+
+service Catalog {
+  rpc GetCatalogItemById(CatalogItemRequest) returns (CatalogItemResponse) {}
+}
+
+message CatalogItemRequest {
+  int32 id = 1;
+}
+
+message CatalogItemResponse {
+  int32 id = 1;
+  string name = 2;
+  double price = 3;
+  optional string cover_url = 4;
+}
