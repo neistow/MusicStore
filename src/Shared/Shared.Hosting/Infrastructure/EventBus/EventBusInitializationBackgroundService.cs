@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using EasyNetQ.AutoSubscribe;
 using Microsoft.Extensions.Hosting;
@@ -18,7 +19,10 @@ namespace Shared.Hosting.Infrastructure.EventBus
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _autoSubscriber.SubscribeAsync(_busSettings.RegistrationAssemblies, stoppingToken);
+            if (_busSettings.RegistrationAssemblies != null && _busSettings.RegistrationAssemblies.Any())
+            {
+                await _autoSubscriber.SubscribeAsync(_busSettings.RegistrationAssemblies, stoppingToken);
+            }
         }
     }
 }

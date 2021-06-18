@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Hosting;
+using Shared.Hosting.Extensions;
 
 namespace Catalog.Api
 {
@@ -27,6 +28,12 @@ namespace Catalog.Api
             services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
 
             services.AddGrpc();
+
+            services.AddEventBus(opt =>
+            {
+                opt.ConnectionString = Configuration["RabbitMQ:ConnectionString"];
+                opt.SubscriptionPrefixId = Configuration["RabbitMQ:SubscriptionPrefixId"];
+            });
         }
 
         protected override void ConfigureEndpoints(IEndpointRouteBuilder routeBuilder)

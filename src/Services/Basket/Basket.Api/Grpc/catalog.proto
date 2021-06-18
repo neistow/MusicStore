@@ -1,6 +1,6 @@
 ﻿syntax = "proto3";
 
-option csharp_namespace = "GrpcCatalog";
+option csharp_namespace = "GrpcCatalogClient";
 
 service Catalog {
   rpc GetCatalogItemById(CatalogItemRequest) returns (CatalogItemResponse) {}

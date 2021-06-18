@@ -6,6 +6,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Shared\Shared.Hosting\Shared.Hosting.csproj" />
+        <ProjectReference Include="..\..\Catalog\Catalog.IntegrationEvents\Catalog.IntegrationEvents.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,8 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="Grpc\catalog.proto" GrpcServices="Client" Generator="MSBuild:Compile" />
-        <Content Include="@(Protobuf)" />
-        <None Remove="@(Protobuf)" />
+        <Protobuf Include="Grpc\catalog.proto" GrpcServices="Client"/>
     </ItemGroup>
 </Project>

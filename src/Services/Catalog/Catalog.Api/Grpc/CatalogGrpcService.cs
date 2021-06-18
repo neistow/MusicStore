@@ -1,42 +1,37 @@
 ﻿using System.Threading.Tasks;
 using Catalog.Application.Queries;
+using Catalog.Domain.Repositories;
 using Grpc.Core;
-using GrpcCatalog;
+using GrpcCatalogServer;
 using MediatR;
 
 namespace Catalog.Api.Grpc
 {
-    public class CatalogGrpcService : GrpcCatalog.Catalog.CatalogBase
+    public class CatalogGrpcService : GrpcCatalogServer.Catalog.CatalogBase
     {
-        private readonly IMediator _mediator;
+        private readonly ICatalogRepository _catalogRepository;
 
-        public CatalogGrpcService(IMediator mediator)
+        public CatalogGrpcService(ICatalogRepository catalogRepository)
         {
-            _mediator = mediator;
+            _catalogRepository = catalogRepository;
         }
 
         public override async Task<CatalogItemResponse> GetCatalogItemById(CatalogItemRequest request, ServerCallContext context)
         {
-            var album = await _mediator.Send(new GetAlbumQuery
+            var album = await _catalogRepository.GetAlbumById(request.Id);
+            if (album == null)
             {
-                Id = request.Id
-            });
-
-            if (album != null)
-            {
-                context.Status = new Status(StatusCode.OK, "Ok");
-
-                return new CatalogItemResponse
-                {
-                    Id = album.Id,
-                    Name = album.Name,
-                    Price = album.Price,
-                    CoverUrl = album.CoverUrl ?? ""
-                };
+                throw new RpcException(new Status(StatusCode.NotFound, "Item not found"));
             }
 
-            context.Status = new Status(StatusCode.NotFound, "Item not found");
-            return new CatalogItemResponse();
+            context.Status = new Status(StatusCode.OK, "Ok");
+            return new CatalogItemResponse
+            {
+                Id = album.Id,
+                Name = album.Name,
+                Price = album.Price,
+                CoverUrl = album.CoverUrl ?? ""
+            };
         }
     }
 }

@@ -67,6 +67,8 @@ namespace Shared.Hosting.Extensions
 
                 return subscriber;
             });
+
+            services.AddHostedService<EventBusInitializationBackgroundService>();
         }
     }
 }

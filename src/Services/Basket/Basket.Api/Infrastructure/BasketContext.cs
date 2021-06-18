@@ -18,6 +18,7 @@ namespace Basket.Api.Infrastructure
                 .HasKey(b => b.CustomerId);
             modelBuilder.Entity<Domain.Basket>()
                 .Property(b => b.CustomerId).ValueGeneratedNever();
+            modelBuilder.Entity<Domain.Basket>().Navigation(b => b.Items).AutoInclude();
 
             base.OnModelCreating(modelBuilder);
         }

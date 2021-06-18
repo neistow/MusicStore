@@ -7,5 +7,7 @@ namespace Basket.Api.Domain
         IUnitOfWork UnitOfWork { get; }
         Task<Basket> GetBasket(string customerId);
         Task CreateBasket(Basket basket);
+        Task DeleteItem(int itemId);
+        Task UpdateItemPrice(int itemId, double newPrice);
     }
 }

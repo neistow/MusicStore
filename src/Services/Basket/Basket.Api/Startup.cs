@@ -2,13 +2,14 @@ using System;
 using Basket.Api.Application;
 using Basket.Api.Domain;
 using Basket.Api.Infrastructure;
+using Basket.Api.IntegrationEventHandlers;
 using FluentValidation;
-using GrpcCatalog;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Hosting;
+using Shared.Hosting.Extensions;
 
 namespace Basket.Api
 {
@@ -29,15 +30,22 @@ namespace Basket.Api
             services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
 
             services.AddScoped<IBasketRepository, BasketRepository>();
-            
+
             services.AddScoped<IBasketService, BasketService>();
 
             services.AddAutoMapper(typeof(Startup).Assembly);
 
-            services.AddGrpcClient<Catalog.CatalogClient>(o =>
+            services.AddGrpcClient<GrpcCatalogClient.Catalog.CatalogClient>(o => { o.Address = new Uri(Configuration["Grpc:CatalogServiceUrl"]); });
+
+            services.AddEventBus(opt =>
             {
-                o.Address = new Uri(Configuration["Grpc:CatalogServiceUrl"]);
+                opt.ConnectionString = Configuration["RabbitMQ:ConnectionString"];
+                opt.SubscriptionPrefixId = Configuration["RabbitMQ:SubscriptionPrefixId"];
+                opt.RegistrationAssemblies = new[] {typeof(Startup).Assembly};
             });
+
+            services.AddScoped<ItemDeletedEventHandler>();
+            services.AddScoped<ItemPriceChangedEventHandler>();
         }
     }
 }
