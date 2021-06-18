@@ -29,7 +29,7 @@ namespace Ordering.Api.IntegrationEventHandlers
                     ItemId = i.Id,
                     PricePerUnit = i.PricePerUnit,
                     Quantity = i.Quantity
-                })
+                }).ToList()
             };
 
             await _orderingRepository.CreateCheckout(checkout);

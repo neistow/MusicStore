@@ -44,7 +44,7 @@ namespace Basket.Api.Controllers
             return Ok();
         }
 
-        [HttpPost("checkotu")]
+        [HttpPost("checkout")]
         public async Task<IActionResult> Checkout()
         {
             await _basketService.Checkout(_currentUser.Id);

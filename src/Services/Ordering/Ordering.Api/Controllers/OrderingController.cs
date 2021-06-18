@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Ordering.Api.Application.Abstract;
@@ -21,11 +22,11 @@ namespace Ordering.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("checkouts")]
+        [HttpGet("orders")]
         public async Task<IActionResult> GetCheckouts()
         {
             var checkouts = await _orderingService.GetCustomerCheckouts(_currentUser.Id);
-            return Ok(_mapper.Map<CheckoutResponse>(checkouts));
+            return Ok(_mapper.Map<List<CheckoutResponse>>(checkouts));
         }
     }
 }

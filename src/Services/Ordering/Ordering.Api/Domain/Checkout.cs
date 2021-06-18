@@ -11,6 +11,6 @@ namespace Ordering.Api.Domain
         public string CustomerId { get; set; }
         public double TotalSum => Items.Sum(i => i.Quantity * i.PricePerUnit);
 
-        public IEnumerable<CheckoutItem> Items { get; set; }
+        public ICollection<CheckoutItem> Items { get; set; }
     }
 }

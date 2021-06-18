@@ -97,7 +97,7 @@ namespace Basket.Api.Application
                     Id = i.ItemId,
                     Quantity = i.Quantity,
                     PricePerUnit = i.PricePerUnit
-                })
+                }).ToList()
             };
 
             await _bus.PubSub.PublishAsync(checkoutEvent);

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Ordering.Api.Application;
+using Ordering.Api.Application.Abstract;
 using Ordering.Api.Domain.Abstract;
 using Ordering.Api.Infrastructure;
 using Ordering.Api.IntegrationEventHandlers;
@@ -32,6 +34,7 @@ namespace Ordering.Api
             services.AddAutoMapper(typeof(Startup).Assembly);
 
             services.AddScoped<IOrderingRepository, OrderingRepository>();
+            services.AddScoped<IOrderingService, OrderingService>();
             services.AddScoped<BasketCheckoutEventHandler>();
         }
     }
