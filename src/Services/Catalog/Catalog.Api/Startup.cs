@@ -1,4 +1,5 @@
 using Catalog.Api.Grpc;
+using Catalog.Api.Middleware;
 using Catalog.Application;
 using Catalog.Infrastructure;
 using FluentValidation;
@@ -34,6 +35,12 @@ namespace Catalog.Api
                 opt.ConnectionString = Configuration["RabbitMQ:ConnectionString"];
                 opt.SubscriptionPrefixId = Configuration["RabbitMQ:SubscriptionPrefixId"];
             });
+        }
+
+        public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+            base.Configure(app, env);
         }
 
         protected override void ConfigureEndpoints(IEndpointRouteBuilder routeBuilder)

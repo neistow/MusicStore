@@ -1,24 +1,21 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Basket.Api.Application.Abstract;
 using Basket.Api.Domain;
-using Grpc.Core;
+using Basket.Api.Domain.Abstract;
 using GrpcCatalogClient;
-using Microsoft.Extensions.Logging;
 
 namespace Basket.Api.Application
 {
     public class BasketService : IBasketService
     {
         private readonly IBasketRepository _basketRepository;
-        private readonly GrpcCatalogClient.Catalog.CatalogClient _catalogClient;
-        private readonly ILogger<BasketService> _logger;
+        private readonly Catalog.CatalogClient _catalogClient;
 
-        public BasketService(IBasketRepository basketRepository, GrpcCatalogClient.Catalog.CatalogClient catalogClient, ILogger<BasketService> logger)
+        public BasketService(IBasketRepository basketRepository, Catalog.CatalogClient catalogClient)
         {
             _basketRepository = basketRepository;
             _catalogClient = catalogClient;
-            _logger = logger;
         }
 
         public async Task<Domain.Basket> GetBasket(string customerId)
@@ -32,7 +29,12 @@ namespace Basket.Api.Application
             var basket = await _basketRepository.GetBasket(customerId);
             basket ??= await CreateBasket(customerId);
 
-            try
+            var itemInBasket = basket.Items.FirstOrDefault(i => i.ItemId == itemId);
+            if (itemInBasket != null)
+            {
+                itemInBasket.Quantity += quantity;
+            }
+            else
             {
                 var item = await _catalogClient.GetCatalogItemByIdAsync(new CatalogItemRequest
                 {
@@ -47,13 +49,9 @@ namespace Basket.Api.Application
                     PricePerUnit = item.Price,
                     CoverUrl = item.CoverUrl
                 });
-                await _basketRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (RpcException e)
-            {
-                _logger.LogCritical(e.Message);
-                throw;
-            }
+
+            await _basketRepository.UnitOfWork.SaveChangesAsync();
         }
 
         public async Task RemoveItem(string customerId, int itemId, int quantity)

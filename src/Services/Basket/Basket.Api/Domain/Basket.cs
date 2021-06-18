@@ -5,6 +5,7 @@ namespace Basket.Api.Domain
 {
     public class Basket
     {
+        public int Id { get; set; }
         public string CustomerId { get; set; }
         public ICollection<BasketItem> Items { get; set; } = new List<BasketItem>();
 

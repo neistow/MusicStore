@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Catalog.Application.Queries;
 using Catalog.Domain.Repositories;
 using Grpc.Core;
 using GrpcCatalogServer;
-using MediatR;
 
 namespace Catalog.Api.Grpc
 {

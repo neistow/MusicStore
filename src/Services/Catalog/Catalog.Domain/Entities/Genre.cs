@@ -7,6 +7,6 @@ namespace Catalog.Domain.Entities
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<Album> Items { get; set; } = new List<Album>();
+        public ICollection<Album> Albums { get; set; } = new List<Album>();
     }
 }

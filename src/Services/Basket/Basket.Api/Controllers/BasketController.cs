@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
-using Basket.Api.Application;
+using Basket.Api.Application.Abstract;
 using Basket.Api.Requests;
 using Basket.Api.Responses;
 using Microsoft.AspNetCore.Mvc;

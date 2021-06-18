@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Basket.Api.Domain
+namespace Basket.Api.Domain.Abstract
 {
     public interface IBasketRepository
     {

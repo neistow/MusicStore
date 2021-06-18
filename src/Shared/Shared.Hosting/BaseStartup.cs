@@ -60,13 +60,8 @@ namespace Shared.Hosting
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
                 DefaultRequestCulture = new RequestCulture(CultureInfo.InvariantCulture)
@@ -77,6 +72,7 @@ namespace Shared.Hosting
 
             app.UseRouting();
             app.UseCors();
+
             app.UseAuthentication();
             app.UseAuthorization();
 

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Basket.Api.Domain;
+using Basket.Api.Domain.Abstract;
 using Microsoft.EntityFrameworkCore;
 
 namespace Basket.Api.Infrastructure

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Basket.Api.Infrastructure.Migrations
 {
     [DbContext(typeof(BasketContext))]
-    [Migration("20210617193617_Initial")]
+    [Migration("20210618173300_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,10 +19,16 @@ namespace Basket.Api.Infrastructure.Migrations
 
             modelBuilder.Entity("Basket.Api.Domain.Basket", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("CustomerId");
+                    b.HasKey("Id");
 
                     b.ToTable("Baskets");
                 });
@@ -33,8 +39,8 @@ namespace Basket.Api.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("BasketCustomerId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("BasketId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("CoverUrl")
                         .HasColumnType("TEXT");
@@ -43,6 +49,8 @@ namespace Basket.Api.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<double>("PricePerUnit")
@@ -53,16 +61,20 @@ namespace Basket.Api.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BasketCustomerId");
+                    b.HasIndex("BasketId");
 
                     b.ToTable("BasketItems");
                 });
 
             modelBuilder.Entity("Basket.Api.Domain.BasketItem", b =>
                 {
-                    b.HasOne("Basket.Api.Domain.Basket", null)
+                    b.HasOne("Basket.Api.Domain.Basket", "Basket")
                         .WithMany("Items")
-                        .HasForeignKey("BasketCustomerId");
+                        .HasForeignKey("BasketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Basket");
                 });
 
             modelBuilder.Entity("Basket.Api.Domain.Basket", b =>

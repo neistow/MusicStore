@@ -1,4 +1,5 @@
 ﻿using Basket.Api.Domain;
+using Basket.Api.Domain.Abstract;
 using Microsoft.EntityFrameworkCore;
 
 namespace Basket.Api.Infrastructure
@@ -14,12 +15,7 @@ namespace Basket.Api.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Domain.Basket>()
-                .HasKey(b => b.CustomerId);
-            modelBuilder.Entity<Domain.Basket>()
-                .Property(b => b.CustomerId).ValueGeneratedNever();
-            modelBuilder.Entity<Domain.Basket>().Navigation(b => b.Items).AutoInclude();
-
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(BasketContext).Assembly);
             base.OnModelCreating(modelBuilder);
         }
     }

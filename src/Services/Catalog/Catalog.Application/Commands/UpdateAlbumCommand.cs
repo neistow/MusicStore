@@ -4,9 +4,9 @@ using Ardalis.GuardClauses;
 using AutoMapper;
 using Catalog.Application.DTO;
 using Catalog.Domain.Repositories;
-using Catalog.IntegrationEvents;
 using EasyNetQ;
 using MediatR;
+using Shared.IntegrationEvents;
 
 namespace Catalog.Application.Commands
 {

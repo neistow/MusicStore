@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Catalog.Domain;
 using Catalog.Domain.Entities;
 using Catalog.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Infrastructure.Repositories
 {
@@ -14,6 +16,11 @@ namespace Catalog.Infrastructure.Repositories
         public CatalogRepository(CatalogContext context)
         {
             _context = context;
+        }
+
+        public Task<List<Album>> GetAlbums()
+        {
+            return _context.Albums.ToListAsync();
         }
 
         public Task<Album> GetAlbumById(int id)

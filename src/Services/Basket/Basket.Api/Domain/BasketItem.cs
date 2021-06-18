@@ -8,5 +8,8 @@
         public double PricePerUnit { get; set; }
         public int Quantity { get; set; }
         public string CoverUrl { get; set; }
+
+        public int BasketId { get; set; }
+        public Basket Basket { get; set; }
     }
 }

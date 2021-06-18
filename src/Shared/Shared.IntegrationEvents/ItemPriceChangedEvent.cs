@@ -1,4 +1,4 @@
-﻿namespace Catalog.IntegrationEvents
+﻿namespace Shared.IntegrationEvents
 {
     public class ItemPriceChangedEvent
     {

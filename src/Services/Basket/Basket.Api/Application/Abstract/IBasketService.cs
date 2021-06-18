@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Basket.Api.Application
+namespace Basket.Api.Application.Abstract
 {
     public interface IBasketService
     {

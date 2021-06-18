@@ -1,9 +1,12 @@
 using System;
 using Basket.Api.Application;
-using Basket.Api.Domain;
+using Basket.Api.Application.Abstract;
+using Basket.Api.Domain.Abstract;
 using Basket.Api.Infrastructure;
 using Basket.Api.IntegrationEventHandlers;
+using Basket.Api.Middleware;
 using FluentValidation;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +38,10 @@ namespace Basket.Api
 
             services.AddAutoMapper(typeof(Startup).Assembly);
 
-            services.AddGrpcClient<GrpcCatalogClient.Catalog.CatalogClient>(o => { o.Address = new Uri(Configuration["Grpc:CatalogServiceUrl"]); });
+            services.AddGrpcClient<GrpcCatalogClient.Catalog.CatalogClient>(o =>
+            {
+                o.Address = new Uri(Configuration["Grpc:CatalogServiceUrl"]);
+            });
 
             services.AddEventBus(opt =>
             {
@@ -46,6 +52,12 @@ namespace Basket.Api
 
             services.AddScoped<ItemDeletedEventHandler>();
             services.AddScoped<ItemPriceChangedEventHandler>();
+        }
+
+        public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+            base.Configure(app, env);
         }
     }
 }

@@ -18,8 +18,14 @@ namespace Catalog.Api.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet("albums")]
+        public async Task<IActionResult> GetAlbums()
+        {
+            return Ok(await _mediator.Send(new GetAlbumsQuery()));
+        }
+        
         [HttpGet("albums/{id}")]
-        public async Task<IActionResult> GetItemById(int id)
+        public async Task<IActionResult> GetAlbumsById(int id)
         {
             return Ok(await _mediator.Send(new GetAlbumQuery
             {

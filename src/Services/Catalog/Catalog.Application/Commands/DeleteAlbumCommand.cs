@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using Catalog.Domain.Repositories;
-using Catalog.IntegrationEvents;
 using EasyNetQ;
 using MediatR;
+using Shared.IntegrationEvents;
 
 namespace Catalog.Application.Commands
 {

@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Basket.Api.Domain;
-using Catalog.IntegrationEvents;
+using Basket.Api.Domain.Abstract;
 using EasyNetQ.AutoSubscribe;
+using Shared.IntegrationEvents;
 
 namespace Basket.Api.IntegrationEventHandlers
 {
