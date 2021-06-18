@@ -40,6 +40,12 @@ namespace Basket.Api.Middleware
                     context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                     return context.Response.WriteAsJsonAsync(error);
                 }
+                case InvalidOperationException opEx:
+                {
+                    var error = new ApiError(400, "", opEx.Message);
+                    context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+                    return context.Response.WriteAsJsonAsync(error);
+                }
                 case RpcException rpcEx:
                 {
                     var error = new ApiError(400, "", rpcEx.Message);

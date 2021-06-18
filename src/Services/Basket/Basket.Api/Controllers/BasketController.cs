@@ -29,7 +29,7 @@ namespace Basket.Api.Controllers
             return Ok(_mapper.Map<BasketResponse>(basket));
         }
 
-        
+
         [HttpPost("items/add")]
         public async Task<IActionResult> AddItem(AddItemRequest request)
         {
@@ -41,6 +41,13 @@ namespace Basket.Api.Controllers
         public async Task<IActionResult> RemoveItem(RemoveItemRequest request)
         {
             await _basketService.RemoveItem(_currentUser.Id, request.ItemId, request.Quantity);
+            return Ok();
+        }
+
+        [HttpPost("checkotu")]
+        public async Task<IActionResult> Checkout()
+        {
+            await _basketService.Checkout(_currentUser.Id);
             return Ok();
         }
     }

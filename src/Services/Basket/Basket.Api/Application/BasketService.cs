@@ -1,20 +1,25 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Basket.Api.Application.Abstract;
 using Basket.Api.Domain;
 using Basket.Api.Domain.Abstract;
+using EasyNetQ;
 using GrpcCatalogClient;
+using Shared.IntegrationEvents;
 
 namespace Basket.Api.Application
 {
     public class BasketService : IBasketService
     {
         private readonly IBasketRepository _basketRepository;
+        private readonly IBus _bus;
         private readonly Catalog.CatalogClient _catalogClient;
 
-        public BasketService(IBasketRepository basketRepository, Catalog.CatalogClient catalogClient)
+        public BasketService(IBasketRepository basketRepository, IBus bus, Catalog.CatalogClient catalogClient)
         {
             _basketRepository = basketRepository;
+            _bus = bus;
             _catalogClient = catalogClient;
         }
 
@@ -73,6 +78,31 @@ namespace Basket.Api.Application
                 basketItem.Quantity -= quantity;
             }
 
+            await _basketRepository.UnitOfWork.SaveChangesAsync();
+        }
+
+        public async Task Checkout(string customerId)
+        {
+            var basket = await _basketRepository.GetBasket(customerId);
+            if (!basket.Items.Any())
+            {
+                throw new InvalidOperationException("Basket is empty");
+            }
+
+            var checkoutEvent = new BasketCheckoutEvent
+            {
+                CustomerId = customerId,
+                Items = basket.Items.Select(i => new Item
+                {
+                    Id = i.ItemId,
+                    Quantity = i.Quantity,
+                    PricePerUnit = i.PricePerUnit
+                })
+            };
+
+            await _bus.PubSub.PublishAsync(checkoutEvent);
+
+            basket.Items.Clear();
             await _basketRepository.UnitOfWork.SaveChangesAsync();
         }
 
