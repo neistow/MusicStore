@@ -35,6 +35,21 @@ namespace Catalog.Api
                 opt.ConnectionString = Configuration["RabbitMQ:ConnectionString"];
                 opt.SubscriptionPrefixId = Configuration["RabbitMQ:SubscriptionPrefixId"];
             });
+
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("GrpcScope", cfg =>
+                {
+                    cfg.RequireAuthenticatedUser();
+                    cfg.RequireClaim("scope", "grpc");
+                });
+
+                opt.AddPolicy("AdminScope", cfg =>
+                {
+                    cfg.RequireAuthenticatedUser();
+                    cfg.RequireClaim("scope", "admin");
+                });
+            });
         }
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)

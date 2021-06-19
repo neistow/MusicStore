@@ -2,9 +2,11 @@
 using Catalog.Domain.Repositories;
 using Grpc.Core;
 using GrpcCatalogServer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Catalog.Api.Grpc
 {
+    [Authorize("GrpcScope")]
     public class CatalogGrpcService : GrpcCatalogServer.Catalog.CatalogBase
     {
         private readonly ICatalogRepository _catalogRepository;

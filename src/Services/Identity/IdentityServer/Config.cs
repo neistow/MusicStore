@@ -1,4 +1,5 @@
-﻿using IdentityServer4.Models;
+﻿using System;
+using IdentityServer4.Models;
 using System.Collections.Generic;
 
 namespace IdentityServer
@@ -16,7 +17,8 @@ namespace IdentityServer
             new[]
             {
                 new ApiScope("default", "Provides user access"),
-                new ApiScope("manage", "Provides admin access")
+                new ApiScope("admin", "Provides admin access"),
+                new ApiScope("grpc", "Provides grpc access")
             };
 
         public static IEnumerable<Client> Clients =>
@@ -36,7 +38,19 @@ namespace IdentityServer
                     RequireClientSecret = false,
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     AllowOfflineAccess = true,
-                    AllowedScopes = {"openid", "profile", "manage"}
+                    AllowedScopes = {"openid", "profile", "admin"}
+                },
+                new Client
+                {
+                    ClientId = "basket_service",
+                    RequireClientSecret = true,
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowedScopes = {"grpc"},
+                    ClientSecrets =
+                    {
+                        new Secret("basket_service_secret".Sha256())
+                    },
+                    AccessTokenLifetime = (int) TimeSpan.FromDays(30).TotalSeconds
                 }
             };
     }

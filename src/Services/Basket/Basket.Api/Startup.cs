@@ -1,4 +1,6 @@
 using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Basket.Api.Application;
 using Basket.Api.Application.Abstract;
 using Basket.Api.Domain.Abstract;
@@ -6,6 +8,8 @@ using Basket.Api.Infrastructure;
 using Basket.Api.IntegrationEventHandlers;
 using Basket.Api.Middleware;
 using FluentValidation;
+using Grpc.Core;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -36,12 +40,30 @@ namespace Basket.Api
 
             services.AddScoped<IBasketService, BasketService>();
 
+            services.AddSingleton<IGrpcAuthService, GrpcAuthService>();
+
             services.AddAutoMapper(typeof(Startup).Assembly);
 
-            services.AddGrpcClient<GrpcCatalogClient.Catalog.CatalogClient>(o =>
+            services.AddHttpClient();
+
+            services.AddMemoryCache();
+
+            services.AddGrpcClient<GrpcCatalogClient.Catalog.CatalogClient>(opt =>
             {
-                o.Address = new Uri(Configuration["Grpc:CatalogServiceUrl"]);
-            });
+                opt.Address = new Uri(Configuration["Grpc:CatalogServiceUrl"]);
+            }).ConfigureChannel(async (sp, opt) =>
+                {
+                    var authService = sp.GetRequiredService<IGrpcAuthService>();
+                    var token = await authService.GetToken();
+                
+                    var credentials = CallCredentials.FromInterceptor((ctx, meta) =>
+                    {
+                        meta.Add("Authorization", $"Bearer {token}");
+                        return Task.CompletedTask;
+                    });
+                
+                    opt.Credentials = ChannelCredentials.Create(new SslCredentials(), credentials);
+                });
 
             services.AddEventBus(opt =>
             {
