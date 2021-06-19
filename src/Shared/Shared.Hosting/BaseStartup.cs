@@ -48,6 +48,7 @@ namespace Shared.Hosting
 
             services.AddOpenApiDocument(document =>
             {
+                document.Title = "Api documentation";
                 document.AddSecurity("Bearer", Array.Empty<string>(), new OpenApiSecurityScheme
                 {
                     Type = OpenApiSecuritySchemeType.Http,

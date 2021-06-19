@@ -4,6 +4,7 @@ using Basket.Api.Application.Abstract;
 using Basket.Api.Requests;
 using Basket.Api.Responses;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using Shared.Abstractions;
 using Shared.Hosting.Infrastructure;
 
@@ -23,6 +24,7 @@ namespace Basket.Api.Controllers
         }
 
         [HttpGet]
+        [SwaggerResponse(200, typeof(BasketResponse))]
         public async Task<IActionResult> GetBasket()
         {
             var basket = await _basketService.GetBasket(_currentUser.Id);

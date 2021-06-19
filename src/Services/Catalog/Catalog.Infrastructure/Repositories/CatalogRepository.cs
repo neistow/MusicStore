@@ -39,6 +39,11 @@ namespace Catalog.Infrastructure.Repositories
             return Task.CompletedTask;
         }
 
+        public Task<List<Genre>> GetGenres()
+        {
+            return _context.Genres.ToListAsync();
+        }
+
         public Task<Genre> GetGenreById(int id)
         {
             return _context.Genres.FindAsync(id).AsTask();

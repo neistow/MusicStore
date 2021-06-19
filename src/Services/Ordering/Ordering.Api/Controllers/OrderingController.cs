@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using Ordering.Api.Application.Abstract;
 using Ordering.Api.Responses;
 using Shared.Abstractions;
@@ -23,6 +24,7 @@ namespace Ordering.Api.Controllers
         }
 
         [HttpGet("orders")]
+        [SwaggerResponse(200, typeof(IEnumerable<CheckoutResponse>))]
         public async Task<IActionResult> GetCheckouts()
         {
             var checkouts = await _orderingService.GetCustomerCheckouts(_currentUser.Id);
